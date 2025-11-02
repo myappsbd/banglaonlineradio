@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>বাংলা অনলাইন রেডিও - প্রিমিয়াম এক্সপেরিয়েন্স</title>
+  <!-- PWA Manifest Link -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Theme color for Safari -->
+  <meta name="theme-color" content="#6a11cb">
+  <meta name="description" content="বিনামূল্যে বাংলা অনলাইন রেডিও শুনুন। ঢাকা এফএম, রেডিও ফুর্তি, বিবিসি বাংলা, বাংলাদেশ বেতারসহ ৪০+ বাংলা রেডিও স্টেশন। সরাসরি স্ট্রিমিং, উচ্চমানের অডিও এবং ব্যবহারকারী-বান্ধব ইন্টারফেস।">
+  <meta name="keywords" content="Bangla Radio, Bangla FM Radio, Bangladesh FM, Radio Foorti, Radio Today, Dhaka FM, BBC Bangla, Bangla Music Radio, Online Radio Bangladesh, FM Radio App, Bangla Live Radio, Bangla Songs, Bangla Islamic Radio, Radio Streaming, Bangladeshi FM Stations, বাংলা রেডিও, বাংলা এফএম, বাংলাদেশ রেডিও, অনলাইন রেডিও">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 🔹 Overlay -->
+  <div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle" tabindex="-1">
+    <h1 id="overlayTitle">বাংলা অনলাইন রেডিও</h1>
+    <section class="seo-content" aria-label="বাংলা রেডিও সম্পর্কে তথ্য" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+      <h2 style="color: #ffffff; margin-bottom: 15px; font-size: 1.4rem;">বাংলা অনলাইন রেডিও - শ্রেষ্ঠ বাংলা সংগীত এবং খবরের উৎস</h2>
+      <p style="color: #e0e0e0; margin-bottom: 15px; line-height: 1.6;">বাংলাদেশের সেরা অনলাইন রেডিও স্টেশনগুলোর সংগ্রহ। ঢাকা এফএম, রেডিও ফুর্তি, রেডিও টুডে, বাংলাদেশ বেতার, বিবিসি বাংলা এবং আরও ৪০+ জনপ্রিয় বাংলা রেডিও স্টেশন বিনামূল্যে শুনুন। উন্নত ভিজুয়ালাইজার, ইকুয়ালাইজার এবং স্লিপ টাইমার সহ প্রিমিয়াম রেডিও অভিজ্ঞতা উপভোগ করুন।</p>
+      <button id="startBtn" class="focus-indicator">▶ রেডিও শুরু করুন</button>
+    </section>
+
+    <!-- 🔥 Premium Ad Banner Inside Overlay -->
+    <div id="adBanner" class="ad-container">
+      <div class="ad-content">
+        <div class="ad-badge">🔥 বিশেষ অফার</div>
+        <h3 class="ad-title">🎧 প্রিমিয়াম হেডফোন ৫০% ছাড়ে!</h3>
+        <p class="ad-description">উচ্চমানের সাউন্ড কোয়ালিটি উপভোগ করুন</p>
+        <div class="ad-features">
+          <span>⭐ ৪.৮/৫ রেটিং</span>
+          <span>🚚 ফ্রি ডেলিভারি</span>
+          <span>💰 ক্যাশ অন ডেলিভারি</span>
+        </div>
+        <a href="https://pawsdefenseneigh.com/rzzsicc6hr?key=0e922b22ec73d9514aece9057c0cc59c" 
+           target="_blank" 
+           class="ad-button">
+          🎯 এখনই কিনুন - মাত্র ৳১,৯৯০
+        </a>
+        <button class="ad-close" onclick="closeAd()">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Main Player -->
+  <main class="container" role="main" aria-label="Bangla Online Radio Player">
+    <!-- Loading and Error Overlays -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">লোড হচ্ছে...</div>
+        <div class="loading-progress"><div class="loading-progress-bar" id="loadingProgress"></div></div>
+      </div>
+    </div>
+    <div class="error-overlay" id="errorOverlay">
+      <div class="error-content">
+        <div class="error-icon">⚠️</div>
+        <div class="error-title" id="errorTitle">ত্রুটি ঘটেছে</div>
+        <div class="error-description" id="errorDescription"></div>
+        <div class="error-actions">
+          <button class="error-btn" id="retryBtn">পুনরায় চেষ্টা করুন</button>
+          <button class="error-btn" id="nextStationBtn">পরবর্তী স্টেশন</button>
+          <button class="error-btn" id="closeErrorBtn">বন্ধ করুন</button>
+        </div>
+      </div>
+    </div>
+
+    <h1>বাংলা অনলাইন রেডিও</h1>
+
+    <!-- Search Box -->
+    <div class="search-wrapper">
+      <input type="text" id="stationSearch" placeholder="🔍 স্টেশন খুঁজুন..." aria-label="Search stations" class="focus-indicator">
+      <button id="clearSearch" class="control-btn focus-indicator" aria-label="Clear search"><i class="fa-solid fa-times"></i></button>
+    </div>
+
+    <!-- Station Selector -->
+    <select id="stationSelector" aria-label="Select Station" class="focus-indicator"></select>
+
+    <!-- Presets -->
+    <div class="presets-wrapper">
+      <label>⭐দ্রুত প্রিসেট:</label>
+      <div class="presets-buttons" id="presetButtons"></div>
+    </div>
+
+    <!-- History Section -->
+    <div class="history-section" id="historySection">
+      <label>⏰ সম্প্রতি শোনা:</label>
+      <div class="history-buttons" id="historyButtons"></div>
+    </div>
+
+    <!-- Equalizer Section -->
+    <div class="equalizer-section" id="equalizerSection">
+      <label>🎛️ ইকুয়ালাইজার:</label>
+      <div class="eq-controls">
+        <div class="eq-control"><span class="eq-label">বেস</span><input type="range" class="eq-slider focus-indicator" id="eqBass" min="-12" max="12" value="0" step="1" aria-label="Bass equalizer"></div>
+        <div class="eq-control"><span class="eq-label">মিড</span><input type="range" class="eq-slider focus-indicator" id="eqMid" min="-12" max="12" value="0" step="1" aria-label="Mid equalizer"></div>
+        <div class="eq-control"><span class="eq-label">ট্রেবল</span><input type="range" class="eq-slider focus-indicator" id="eqTreble" min="-12" max="12" value="0" step="1" aria-label="Treble equalizer"></div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="prevBtn" class="control-btn focus-indicator" aria-label="Previous Station"><i class="fa-solid fa-backward"></i></button>
+      <button id="playPauseBtn" class="control-btn focus-indicator" aria-label="Play or Pause"><i class="fa-solid fa-play"></i></button>
+      <button id="nextBtn" class="control-btn focus-indicator" aria-label="Next Station"><i class="fa-solid fa-forward"></i></button>
+      <button id="darkModeToggle" class="control-btn focus-indicator" aria-label="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></button>
+      <button id="favBtn" class="control-btn focus-indicator"><i class="fa-solid fa-star"></i> ফেভারিট</button>
+    </div>
+
+    <!-- Volume Control -->
+    <div class="volume-wrapper" role="group" aria-label="Volume Control">
+      <label for="volumeControl">🔊 ভলিউম</label>
+      <input type="range" id="volumeControl" class="focus-indicator" min="0" max="1" step="0.01" value="0.5" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.5" />
+      <div class="volume-bar" aria-hidden="true"><div class="volume-fill"></div></div>
+    </div>
+
+    <!-- Status Text -->
+    <p id="nowPlaying" aria-live="polite" aria-atomic="true">🎶 চালানোর জন্য প্রস্তুত</p>
+    <p id="buffering" aria-live="assertive" aria-atomic="true"></p>
+
+    <!-- Visualizer Controls -->
+    <div class="visualizer-controls">
+      <button class="viz-mode-btn active focus-indicator" data-mode="bars">বার</button>
+      <button class="viz-mode-btn focus-indicator" data-mode="circle">বৃত্ত</button>
+      <button class="viz-mode-btn focus-indicator" data-mode="wave">তরঙ্গ</button>
+      <button class="viz-mode-btn focus-indicator" data-mode="particles">কণা</button>
+    </div>
+
+    <!-- Visualizer -->
+    <canvas id="visualizer" aria-hidden="true"></canvas>
+
+    <!-- Sleep Timer -->
+    <div class="sleep-timer-wrapper" role="group" aria-label="Sleep Timer Setting">
+      <label for="sleepTime">⏰ টাইমার:</label>
+      <select id="sleepTime" class="focus-indicator" aria-label="Select Sleep Time">
+        <option value="0">বন্ধ</option>
+        <option value="5">৫ মিনিট</option>
+        <option value="10">১০ মিনিট</option>
+        <option value="15">১৫ মিনিট</option>
+        <option value="30">৩০ মিনিট</option>
+        <option value="60">৬০ মিনিট</option>
+      </select>
+      <button class="sleep-btn focus-indicator" id="timerOnBtn" aria-label="Start Sleep Timer"><i class="fa-solid fa-check"></i></button>
+      <button class="sleep-btn focus-indicator" id="timerOffBtn" aria-label="Cancel Sleep Timer"><i class="fa-solid fa-times"></i></button>
+    </div>
+    <p id="timerCountdown" aria-live="polite" aria-atomic="true"></p>
+
+    <!-- Swipe Hint -->
+    <p class="swipe-hint">💡 টিপ: স্টেশন পরিবর্তন করতে ডানে/বামে সোয়াইপ করুন</p>
+
+    <!-- Audio Element -->
+    <audio id="radioPlayer" crossorigin="anonymous"></audio>
+  </main>
+
+  <!-- Mobile Bottom Navigation -->
+  <div class="mobile-bottom-nav" id="mobileNav">
+    <button class="mobile-nav-btn focus-indicator" id="mobileHomeBtn" aria-label="Home"><i class="fas fa-home"></i></button>
+    <button class="mobile-nav-btn focus-indicator" id="mobileFavBtn" aria-label="Favorites"><i class="fas fa-star"></i></button>
+    <button class="mobile-nav-btn active focus-indicator" id="mobilePlayBtn" aria-label="Play/Pause"><i class="fas fa-play"></i></button>
+    <button class="mobile-nav-btn focus-indicator" id="mobileSleepBtn" aria-label="Sleep Timer"><i class="fas fa-bed"></i></button>
+    <button class="mobile-nav-btn focus-indicator" id="mobileSettingsBtn" aria-label="Settings"><i class="fas fa-cog"></i></button>
+  </div>
+
+  <!-- External JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
